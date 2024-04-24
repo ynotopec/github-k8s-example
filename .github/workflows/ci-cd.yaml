@@ -11,7 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
+      run: |
+        docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
+        docker push ghcr.io/ynotopec/github-k8s-example:latest
 
   deploy:
     needs: build
@@ -20,9 +22,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Set up Kubeconfig
       env:
-        KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
+        KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_FILE }}
       run: |
-        mkdir $HOME/.kube
         echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
     - name: Deploy to Kubernetes
       run: |
