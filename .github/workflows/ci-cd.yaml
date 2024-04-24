@@ -1,24 +1,28 @@
-# .github/workflows/ci-cd.yaml
 name: CI/CD Pipeline
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
+      run: docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Kubeconfig
+      env:
+        KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
       run: |
-        docker build . -t ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
-    - name: Login to GitHub Container Registry
-      run: echo ${{secrets.GITHUB_TOKEN}} | docker login -u ${{github.actor}} --password-stdin ghcr.io
-    - name: Push the Docker image to GitHub Container Registry
-      run: docker push ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
+        echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
     - name: Deploy to Kubernetes
-      uses: k8s-actions/kubectl@v1
-      with:
-        kubeconfig: ${{secrets.KUBECONFIG}}
-        command: apply -f deployment.yaml --namespace=github-k8s-example
+      run: |
+        kubectl apply -f deployment.yaml
