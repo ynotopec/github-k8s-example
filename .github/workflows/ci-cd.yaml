@@ -12,9 +12,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build and push Docker image
       run: |
-        echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+        #echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
         docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
-        docker push ghcr.io/ynotopec/github-k8s-example:latest
+        #docker push ghcr.io/ynotopec/github-k8s-example:latest
 
   deploy:
     needs: build
@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Set up Kubeconfig
       env:
-        KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_FILE }}
+        KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
       run: |
         echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
     - name: Deploy to Kubernetes
