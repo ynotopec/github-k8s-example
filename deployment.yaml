@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: ghcr.io/ynotopec/github-k8s-example:latest
+        image: ghcr.io/ynotopec/github-k8s-example:main
         ports:
         - containerPort: 5000
 ---
