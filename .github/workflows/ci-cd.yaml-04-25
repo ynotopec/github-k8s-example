@@ -1,0 +1,29 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Kubeconfig
+      env:
+        KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
+      run: |
+        mkdir $HOME/.kube
+        echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f deployment.yaml
