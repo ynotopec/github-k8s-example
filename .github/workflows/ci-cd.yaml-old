@@ -10,8 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
+    - name: Build and push Docker image
+      run: |
+        #echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+        docker build . -t ghcr.io/ynotopec/github-k8s-example:latest
+        #docker push ghcr.io/ynotopec/github-k8s-example:latest
 
   deploy:
     needs: build
@@ -22,7 +25,6 @@ jobs:
       env:
         KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG }}
       run: |
-        mkdir $HOME/.kube
         echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
     - name: Deploy to Kubernetes
       run: |
