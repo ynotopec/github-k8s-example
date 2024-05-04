@@ -42,11 +42,11 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/session-cookie-hash: sha1
     nginx.ingress.kubernetes.io/session-cookie-name: route
-  name: github-k8s-example.c0.cloud-pi-native.com
+  name: github-k8s-example.c0.ns1lab.net
 spec:
   ingressClassName: public
   rules:
-  - host: github-k8s-example.c0.cloud-pi-native.com
+  - host: github-k8s-example.c0.ns1lab.net
     http:
       paths:
       - backend:
@@ -58,5 +58,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - github-k8s-example.c0.cloud-pi-native.com
-    secretName: github-k8s-example.c0.cloud-pi-native.com-tls
+    - github-k8s-example.ns1lab.net
+    secretName: github-k8s-example.c0.ns1lab.net-tls
