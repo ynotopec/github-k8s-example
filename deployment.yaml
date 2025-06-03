@@ -58,5 +58,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - github-k8s-example.ns1lab.net
+    - github-k8s-example.c0.ns1lab.net
     secretName: github-k8s-example.c0.ns1lab.net-tls
