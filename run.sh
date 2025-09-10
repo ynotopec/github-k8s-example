@@ -3,7 +3,7 @@
 serverAddress=$1
 portNumber=$2
 
-pythonVersion=python3.12
+pythonVersion=python3
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pythonDir=~/"venv/$(basename "${DIR}")"
