@@ -25,11 +25,13 @@ export HF_HUB_DISABLE_TELEMETRY=1
 if [ ! -z "${serverAddress}" ] ;then
   export GRADIO_SERVER_NAME="${serverAddress}"
   export SERVER_NAME="${serverAddress}"
+  export HOST="${serverAddress}"
 fi
 if [ ! -z "${portNumber}" ] ;then
   export GRADIO_SERVER_PORT="${portNumber}"
   export SERVER_PORT="${portNumber}"
   export BACK_PORT=$((SERVER_PORT + 1))
+  export PORT="${portNumber}"
 fi
 export CUDA_LAUNCH_BLOCKING=1
 
