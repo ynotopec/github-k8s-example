@@ -2,61 +2,64 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world
+  name: ${SERVICE_NAME}
+  namespace: ${NAMESPACE}
 spec:
-  replicas: 2
+  replicas: ${REPLICAS}
   selector:
     matchLabels:
-      app: hello-world
+      app: ${SERVICE_NAME}
   template:
     metadata:
       labels:
-        app: hello-world
+        app: ${SERVICE_NAME}
     spec:
       containers:
-      - name: hello-world
-        image: ghcr.io/ynotopec/github-k8s-example:main
+      - name: ${SERVICE_NAME}
+        image: ghcr.io/ynotopec/${SERVICE_NAME}:main
         ports:
-        - containerPort: 5000
+        - containerPort: ${APPLICATION_PORT}
 ---
 # service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-service
+  name: ${SERVICE_NAME}-service
+  namespace: ${NAMESPACE}
 spec:
   type: ClusterIP
   selector:
-    app: hello-world
+    app: ${SERVICE_NAME}
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 5000
+    targetPort: ${APPLICATION_PORT}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: ${SERVICE_NAME}.c0.ns1lab.net
+  namespace: ${NAMESPACE}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/affinity: cookie
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/session-cookie-hash: sha1
     nginx.ingress.kubernetes.io/session-cookie-name: route
-  name: github-k8s-example.c0.ns1lab.net
 spec:
   ingressClassName: public
   rules:
-  - host: github-k8s-example.c0.ns1lab.net
+  - host: ${SERVICE_NAME}.c0.ns1lab.net
     http:
       paths:
       - backend:
           service:
-            name: hello-world-service
+            name: ${SERVICE_NAME}-service
             port:
               number: 80
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - github-k8s-example.c0.ns1lab.net
-    secretName: github-k8s-example.c0.ns1lab.net-tls
+    - ${SERVICE_NAME}.c0.ns1lab.net
+    secretName: ${SERVICE_NAME}.c0.ns1lab.net-tls

@@ -8,6 +8,11 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  SERVICE_NAME: github-k8s-example
+  NAMESPACE: test
+  APPLICATION_PORT: 5000
+  REPLICAS: 2
+  PYTHON_VERSION: 3.12
 
 jobs:
   publish-docker-image:
@@ -42,6 +47,8 @@ jobs:
           push: true   # Push the built Docker image to GitHub Packages
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            PYTHON_VERSION=${{ env.PYTHON_VERSION }}
 
   deploy:
     needs: publish-docker-image
@@ -56,4 +63,4 @@ jobs:
         echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
     - name: Deploy to Kubernetes
       run: |
-        kubectl apply -f deployment.yaml
+        envsubst < deployment.yaml | kubectl apply -f -
