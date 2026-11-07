@@ -22,7 +22,7 @@ To work on this project, please fork this repository to your own GitHub account.
 Thank you for your interest in contributing to our project. After making your changes, please create a pull request to the original repository.
 
 ## License
-Specify the license under which the project is made available.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
 
 ## Contact
 If you have any questions or feedback, please open an issue in the repository.
